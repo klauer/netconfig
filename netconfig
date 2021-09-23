@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # This script add a host on the lab network
 # It will add the host in the LDAP database, assign it an IP
 # address and make sure all the network services know about
