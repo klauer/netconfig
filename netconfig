@@ -177,18 +177,18 @@ def notify_admin(strNodeName, action, strOther):
         strMsg += "Subject: %s\n" % (strSubject)
         strMsg += "\n"
         if action == "add":
-            strMsg += 'A new node "%s" has been added by user %s.\n\n' % (
+            strMsg += 'A new node "{}" has been added by user {}.\n\n'.format(
                 strNodeName,
                 getpass.getuser(),
             )
         if action == "rename":
-            strMsg += 'The node "%s" has been renamed to "%s" by user %s.\n\n' % (
+            strMsg += 'The node "{}" has been renamed to "{}" by user {}.\n\n'.format(
                 strOther,
                 strNodeName,
                 getpass.getuser(),
             )
         if action == "del":
-            strMsg += 'The node "%s" has been removed by user %s.\n\n' % (
+            strMsg += 'The node "{}" has been removed by user {}.\n\n'.format(
                 strNodeName,
                 getpass.getuser(),
             )
@@ -502,7 +502,7 @@ def connect_console(
             if "link" in attr:
                 if attr["link"][0] != dnNode:
                     raise RuntimeError(
-                        "%s not linked to node %s" % (dnDelTerminalServerPort, dnNode)
+                        f"{dnDelTerminalServerPort} not linked to node {dnNode}"
                     )
         if dnAddTerminalServerPort != None:
             if "link" in attr:
@@ -524,7 +524,7 @@ def connect_power(
             if "powerplug" in attr:
                 if attr["powerplug"][0] != dnNode:
                     raise RuntimeError(
-                        "%s not linked to node %s" % (dnDelPowerOutlet, dnNode)
+                        f"{dnDelPowerOutlet} not linked to node {dnNode}"
                     )
         if dnAddPowerOutlet != None:
             if "powerplug" in attr:
@@ -723,7 +723,7 @@ def edit_node(
 
         except ldap.INVALID_DN_SYNTAX:
             raise RuntimeError(
-                "invalid rename of %s %s to parent %s!" % (dn, newRdn, newParent)
+                f"invalid rename of {dn} {newRdn} to parent {newParent}!"
             )
         except ldap.NOT_ALLOWED_ON_NONLEAF:
             raise RuntimeError("rename to subnet %s failed!" % strSubnet)
@@ -750,7 +750,7 @@ def edit_node(
 
         except ldap.INVALID_DN_SYNTAX:
             raise RuntimeError(
-                "invalid rename of %s %s to parent %s!" % (dn, newRdn, newParent)
+                f"invalid rename of {dn} {newRdn} to parent {newParent}!"
             )
         except ldap.NOT_ALLOWED_ON_NONLEAF:
             raise RuntimeError("rename to subnet %s failed!" % strSubnet)
@@ -992,7 +992,7 @@ def view_node(ldapDatabase, dnBase, strNode, strSubnet=None, brief=False):
 def search_node(ldapDatabase, dnBase, strMatch, strSubnet=None, brief=False):
     lst_dnattr = find_all(ldapDatabase, dnBase, strMatch, strSubnet)
     if lst_dnattr == None:
-        print("\nFound 0 entry that match %s." % (iCount, strMatch))
+        print(f"\nFound 0 entry that match {iCount}.")
         return 0
     iCount = 0
     for (dn, attr) in lst_dnattr:
@@ -1122,7 +1122,7 @@ def getNetworkIPAddress(ldapDatabase, dnBase, strSubnet):
     ip = [int(c) for c in strIP.split(".")]
     netmask = [int(c) for c in strNetMask.split(".")]
     if (len(ip) != 4) or (len(netmask) != 4):
-        raise RuntimeError("subnet %s IP %s is invalid" % (strSubnet, strIP))
+        raise RuntimeError(f"subnet {strSubnet} IP {strIP} is invalid")
     # The first 20 IPs are reserved by SCCS
     ipaddr = [
         ip[0] & netmask[0],
@@ -1459,7 +1459,7 @@ def main():
     # talk to the LDAP database as ldap-update)
     try:
         keyname = glob.glob(labroot + "/sshkeys/" + LDAP_KEY_FILE)[0]
-        keyfile = open(keyname, "r")
+        keyfile = open(keyname)
         ldap_key = keyfile.read()
         keyfile.close()
     except:
@@ -1591,7 +1591,7 @@ def main():
             dn = find_ethaddr(ldapDatabase, dnBase, strMacAddress)
             if dn != None:
                 raise RuntimeError(
-                    "MAC address %s already registered under %s" % (strMacAddress, dn)
+                    f"MAC address {strMacAddress} already registered under {dn}"
                 )
                 # Get the DN of the manager
         if strManager != None:
@@ -1690,7 +1690,7 @@ def main():
                     strNodeName = attr["cn"][0]
                 elif dn != cname_dn:
                     raise RuntimeError(
-                        "cname %s does not belong to node %s" % (name, strNodeName)
+                        f"cname {name} does not belong to node {strNodeName}"
                     )
             if dn == None:
                 raise RuntimeError(
